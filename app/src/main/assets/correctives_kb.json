@@ -1,0 +1,92 @@
+[
+  {
+    "issue": "excessive_torso_lean_squat",
+    "likely_causes": ["ankle dorsiflexion limited", "weak upper back/core", "bar path too far forward"],
+    "correctives": ["weighted ankle dorsiflexion stretch", "goblet squat hold", "front squat"]
+  },
+  {
+    "issue": "insufficient_depth_squat",
+    "likely_causes": ["limited hip/ankle mobility", "core bracing failure under load", "unfamiliarity with depth cue"],
+    "correctives": ["box squat to target depth", "hip flexor and ankle mobility drill", "tempo squat with 3s descent"]
+  },
+  {
+    "issue": "knee_valgus_squat",
+    "likely_causes": ["weak hip abductors/glute medius", "poor foot pressure distribution"],
+    "correctives": ["banded lateral walks", "banded squat with knee-out cue", "single-leg glute bridge"]
+  },
+  {
+    "issue": "heels_rising_squat",
+    "likely_causes": ["limited ankle dorsiflexion", "weight shifted onto toes"],
+    "correctives": ["calf and ankle mobility stretch", "heel-elevated goblet squat", "slow eccentric squat with heel-down cue"]
+  },
+  {
+    "issue": "hips_shoot_up_first_squat",
+    "likely_causes": ["weak quads relative to posterior chain", "good-morning-style bar path"],
+    "correctives": ["pause squat at bottom", "front squat", "tempo squat emphasizing quad drive"]
+  },
+  {
+    "issue": "bar_path_drift_squat",
+    "likely_causes": ["inconsistent brace", "forward weight shift out of the hole"],
+    "correctives": ["wall-facing squat drill", "pause squat", "core bracing cue practice"]
+  },
+  {
+    "issue": "bar_path_drift_bench_press",
+    "likely_causes": ["inconsistent bar path over the shoulders", "unstable shoulder blade position"],
+    "correctives": ["spoto press", "close-grip bench press", "scapular retraction drill"]
+  },
+  {
+    "issue": "elbow_flare_bench_press",
+    "likely_causes": ["grip too wide", "insufficient lat engagement"],
+    "correctives": ["close-grip bench press", "lat activation drill before pressing", "board press with tucked elbows"]
+  },
+  {
+    "issue": "insufficient_depth_pushup",
+    "likely_causes": ["limited shoulder/chest range of motion", "core fatigue causing early lockout"],
+    "correctives": ["tempo pushup with 3s descent", "deficit pushup on parallettes", "chest and shoulder mobility stretch"]
+  },
+  {
+    "issue": "hip_sag_pushup",
+    "likely_causes": ["weak core/anti-extension strength", "poor bracing during the set"],
+    "correctives": ["plank hold progression", "dead bug core drill", "reduce rep range and focus on hip alignment"]
+  },
+  {
+    "issue": "lockout_failure_bench_press",
+    "likely_causes": ["triceps weakness relative to chest strength", "fatigue accumulating late in the set"],
+    "correctives": ["close-grip bench press", "board press", "triceps pressdown accessory work"]
+  },
+  {
+    "issue": "back_rounding_deadlift",
+    "likely_causes": ["weak spinal erectors", "bar starting too far from shins", "bracing failure"],
+    "correctives": ["Romanian deadlift with strict form", "rack pull with brace cue", "reduce load and rebuild bracing pattern"]
+  },
+  {
+    "issue": "bar_drift_away_from_body_deadlift",
+    "likely_causes": ["lat engagement failure", "starting position too far from the bar"],
+    "correctives": ["lat activation drill before pulling", "deadlift starting-position cue practice", "snatch-grip RDL for lat awareness"]
+  },
+  {
+    "issue": "hips_rise_too_fast_deadlift",
+    "likely_causes": ["weak quads relative to posterior chain", "good-morning-style pull pattern"],
+    "correctives": ["deficit deadlift", "pause deadlift below the knee", "front squat for quad strength"]
+  },
+  {
+    "issue": "hyperextension_at_lockout_deadlift",
+    "likely_causes": ["overcompensating with lower back at the top", "weak glute lockout"],
+    "correctives": ["glute bridge with hold", "cue hips-through-not-back at lockout", "reduce load and rebuild top-end pattern"]
+  },
+  {
+    "issue": "rushed_tempo_general",
+    "likely_causes": ["chasing rep count over control", "fatigue late in the set"],
+    "correctives": ["tempo-prescribed reps (e.g. 3-1-1)", "reduce load slightly and prioritize control"]
+  },
+  {
+    "issue": "asymmetric_rep_pattern",
+    "likely_causes": ["unilateral strength imbalance", "stance or grip asymmetry"],
+    "correctives": ["single-limb accessory work on the weaker side", "check stance/grip symmetry on setup"]
+  },
+  {
+    "issue": "fatigue_driven_form_breakdown",
+    "likely_causes": ["set duration exceeding current work capacity", "insufficient rest before the set"],
+    "correctives": ["reduce target reps slightly", "increase rest between sets", "prioritize the first clean reps over total count"]
+  }
+]
