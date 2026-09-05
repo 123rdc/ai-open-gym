@@ -8,9 +8,12 @@ import androidx.fragment.app.FragmentActivity
 
 object BiometricHelper {
 
+    private const val AUTHENTICATORS = BiometricManager.Authenticators.BIOMETRIC_STRONG or
+            BiometricManager.Authenticators.DEVICE_CREDENTIAL
+
     fun isBiometricAvailable(context: Context): Boolean {
         val biometricManager = BiometricManager.from(context)
-        return when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
+        return when (biometricManager.canAuthenticate(AUTHENTICATORS)) {
             BiometricManager.BIOMETRIC_SUCCESS -> true
             else -> false
         }
@@ -41,10 +44,9 @@ object BiometricHelper {
             })
 
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setTitle("Fingerprint Login")
-            .setSubtitle("Log in using your fingerprint")
-            .setNegativeButtonText("Use account password")
-            .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG)
+            .setTitle("Gym Form Coach")
+            .setSubtitle("Unlock using fingerprint or screen lock passcode")
+            .setAllowedAuthenticators(AUTHENTICATORS)
             .build()
 
         biometricPrompt.authenticate(promptInfo)
