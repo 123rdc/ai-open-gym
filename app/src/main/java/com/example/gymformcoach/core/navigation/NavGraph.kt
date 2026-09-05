@@ -24,11 +24,13 @@ import com.example.gymformcoach.features.routines.*
 import com.example.gymformcoach.core.utils.PreferenceManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.runtime.remember
+import kotlinx.coroutines.launch
 
 @Composable
 fun NavGraph(navController: NavHostController) {
     val context = LocalContext.current
     val preferenceManager = remember { PreferenceManager(context) }
+    val scope = androidx.compose.runtime.rememberCoroutineScope()
     
     val startDestination = when {
         !preferenceManager.isOnboardingComplete -> Screen.Onboarding.route
@@ -96,6 +98,10 @@ fun NavGraph(navController: NavHostController) {
         }
 
         composable(Screen.Home.route) {
+            // §3.3: offer to resume a session interrupted by process death.
+            ResumeSessionPrompt(onResume = { routineId, exerciseIndex ->
+                navController.navigate(Screen.RoutineCamera.createRoute(routineId, exerciseIndex))
+            })
             HomeScreen(
                 onBodyPartSelected = { bodyPart -> navController.navigate(Screen.WorkoutList.createRoute(bodyPart)) },
                 onNavigateToTab = { route ->
@@ -107,7 +113,65 @@ fun NavGraph(navController: NavHostController) {
                 },
                 onCreateRoutine = { navController.navigate(Screen.RoutineBuilder.route) },
                 onRoutineSelected = { routineId -> navController.navigate(Screen.RoutineDetail.createRoute(routineId)) },
-                onSeeAllRoutines = { navController.navigate(Screen.MyRoutines.route) }
+                onSeeAllRoutines = { navController.navigate(Screen.MyRoutines.route) },
+                onStartPlannedRoutine = { routineId ->
+                    navController.navigate(Screen.RoutineCamera.createRoute(routineId, 0))
+                },
+                onEditWeeklyPlan = { navController.navigate(Screen.WeeklyPlan.route) },
+                onOpenBodyWeight = { navController.navigate(Screen.BodyWeight.route) }
+            )
+        }
+        composable(Screen.WeeklyPlan.route) {
+            com.example.gymformcoach.features.plan.WeeklyPlanScreen(
+                onNavigateToTab = { route ->
+                    navController.navigate(route) {
+                        popUpTo(Screen.Home.route) { saveState = true }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            )
+        }
+        composable(Screen.BodyWeight.route) {
+            com.example.gymformcoach.features.profile.BodyWeightScreen(
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable(Screen.ExerciseLibrary.route) {
+            ExerciseLibraryScreen(
+                onNavigateToTab = { route ->
+                    navController.navigate(route) {
+                        popUpTo(Screen.Home.route) { saveState = true }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                onExerciseSelected = { exercise ->
+                    // Quick single-exercise session, same entry point WorkoutListScreen uses.
+                    navController.navigate(Screen.Camera.createRoute(exercise.name, 0f, 10, 3))
+                }
+            )
+        }
+        composable(Screen.DataPortability.route) {
+            com.example.gymformcoach.features.profile.DataPortabilityScreen(
+                onBack = { navController.popBackStack() },
+                onOpenPlanSharing = { navController.navigate(Screen.PlanSharing.route) },
+                onOpenImport = { navController.navigate(Screen.ImportWorkouts.route) }
+            )
+        }
+        composable(Screen.PlanSharing.route) {
+            com.example.gymformcoach.features.profile.PlanSharingScreen(
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable(Screen.ImportWorkouts.route) {
+            com.example.gymformcoach.features.profile.ImportScreen(
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable(Screen.Coach.route) {
+            com.example.gymformcoach.features.coach.CoachScreen(
+                onBack = { navController.popBackStack() }
             )
         }
         composable(
@@ -124,7 +188,7 @@ fun NavGraph(navController: NavHostController) {
             )
         }
         composable(Screen.Progress.route) {
-            ProgressScreen(onNavigateToTab = { route ->
+            StatsScreen(onNavigateToTab = { route ->
                 navController.navigate(route) {
                     popUpTo(Screen.Home.route) { saveState = true }
                     launchSingleTop = true
@@ -141,7 +205,11 @@ fun NavGraph(navController: NavHostController) {
                         restoreState = true
                     }
                 },
-                onOpenSettings = { navController.navigate(Screen.Settings.route) }
+                onOpenSettings = { navController.navigate(Screen.Settings.route) },
+                onOpenBodyWeight = { navController.navigate(Screen.BodyWeight.route) },
+                onOpenWeeklyPlan = { navController.navigate(Screen.WeeklyPlan.route) },
+                onOpenDataPortability = { navController.navigate(Screen.DataPortability.route) },
+                onOpenCoach = { navController.navigate(Screen.Coach.route) }
             )
         }
         composable(Screen.Settings.route) {
@@ -283,22 +351,85 @@ fun NavGraph(navController: NavHostController) {
                 )
             ) { backStackEntry ->
                 val routineId = backStackEntry.arguments?.getString("routineId") ?: ""
-                val exerciseIndex = backStackEntry.arguments?.getInt("exerciseIndex") ?: 0
+                // §4.2: this is a STEP index (one per set, round-sequenced through
+                // supersets), not an exercise index - a routine with 3-set exercises
+                // has more steps than exercises.
+                val stepIndex = backStackEntry.arguments?.getInt("exerciseIndex") ?: 0
                 val parentEntry = remember(backStackEntry) { navController.getBackStackEntry("routine_detail_flow/$routineId") }
                 val detailViewModel: RoutineDetailViewModel = viewModel(parentEntry)
                 LaunchedEffect(routineId) { detailViewModel.load(routineId) }
-                val exercises by detailViewModel.exercises.collectAsState()
+                val steps by detailViewModel.sessionSteps.collectAsState()
 
-                if (exerciseIndex < exercises.size) {
-                    val current = exercises[exerciseIndex]
+                // §3.3: persist the in-progress session on entry and on every set
+                // completion, so process death (likely with the camera running)
+                // can be resumed instead of losing the workout.
+                val activeSessionRepository = remember {
+                    com.example.gymformcoach.core.data.ActiveSessionRepository(
+                        com.example.gymformcoach.core.data.AppDatabase.getInstance(context)
+                    )
+                }
+                LaunchedEffect(routineId, stepIndex) {
+                    if (stepIndex == 0) activeSessionRepository.start(routineId)
+                }
+
+                if (stepIndex < steps.size) {
+                    val step = steps[stepIndex]
+                    val isPoseTracked = step.exercise.exerciseId.lowercase() in POSE_TRACKED_EXERCISES
+
+                    // Standalone (non-superset) exercises with no camera tracking get the
+                    // multi-set logging table (§3/§5) instead of one screen per set - it
+                    // shows the progression reasoning once and lets every set be checked
+                    // off in place. Superset members stay on the round-sequenced
+                    // per-step camera flow since interleaving two exercises into one
+                    // table is a larger redesign than this pass covers.
+                    if (step.exercise.supersetGroupId == null && !isPoseTracked) {
+                        val routine by detailViewModel.routine.collectAsState()
+                        val exerciseStepCount = steps.drop(stepIndex)
+                            .takeWhile { it.exercise.id == step.exercise.id }.size
+
+                        SetLoggingScreen(
+                            routineExercise = step.exercise,
+                            routine = routine,
+                            stepNumber = steps.take(stepIndex + 1).map { it.exercise.id }.distinct().size,
+                            totalSteps = steps.map { it.exercise.id }.distinct().size,
+                            canMakeSuperset = stepIndex + exerciseStepCount < steps.size,
+                            onMakeSuperset = { /* superset grouping happens in the builder, §4.3 */ },
+                            onBack = { navController.popBackStack() },
+                            onFinishExercise = {
+                                val nextIndex = stepIndex + exerciseStepCount
+                                scope.launch { activeSessionRepository.recordSetCompleted(nextIndex, routineId) }
+                                if (nextIndex < steps.size) {
+                                    navController.navigate(Screen.RoutineCamera.createRoute(routineId, nextIndex)) {
+                                        popUpTo(Screen.RoutineCamera.createRoute(routineId, stepIndex)) { inclusive = true }
+                                    }
+                                } else {
+                                    scope.launch {
+                                        com.example.gymformcoach.core.data.ActiveSessionRepository(
+                                            com.example.gymformcoach.core.data.AppDatabase.getInstance(context)
+                                        ).finish()
+                                    }
+                                    navController.navigate(Screen.Home.route) {
+                                        popUpTo(Screen.Home.route) { inclusive = true }
+                                    }
+                                }
+                            }
+                        )
+                        return@composable
+                    }
+
                     CameraScreen(
-                        workoutType = current.exerciseId,
-                        weight = current.targetWeightKg,
-                        targetReps = current.targetReps,
-                        totalSets = current.targetSets,
+                        workoutType = step.exercise.exerciseId,
+                        weight = step.exercise.targetWeightKg,
+                        targetReps = step.exercise.targetReps,
+                        totalSets = step.exercise.targetSets,
+                        currentSetNumber = step.setIndex + 1,
+                        promptForBodyWeight = stepIndex == 0,
                         onBack = { navController.popBackStack() },
                         onFinishSet = { repCount, isPr, sessionId ->
-                            navController.navigate(Screen.RoutineResults.createRoute(routineId, exerciseIndex, repCount, isPr, sessionId))
+                            scope.launch {
+                                activeSessionRepository.recordSetCompleted(stepIndex, sessionId)
+                            }
+                            navController.navigate(Screen.RoutineResults.createRoute(routineId, stepIndex, repCount, isPr, sessionId))
                         }
                     )
                 }
@@ -314,27 +445,38 @@ fun NavGraph(navController: NavHostController) {
                 )
             ) { backStackEntry ->
                 val routineId = backStackEntry.arguments?.getString("routineId") ?: ""
-                val exerciseIndex = backStackEntry.arguments?.getInt("exerciseIndex") ?: 0
+                val stepIndex = backStackEntry.arguments?.getInt("exerciseIndex") ?: 0
                 val reps = backStackEntry.arguments?.getInt("reps") ?: 0
                 val isPr = backStackEntry.arguments?.getBoolean("isPr") ?: false
                 val exerciseSessionId = backStackEntry.arguments?.getString("exerciseSessionId") ?: ""
                 val parentEntry = remember(backStackEntry) { navController.getBackStackEntry("routine_detail_flow/$routineId") }
                 val detailViewModel: RoutineDetailViewModel = viewModel(parentEntry)
-                val exercises by detailViewModel.exercises.collectAsState()
-                val exerciseName = exercises.getOrNull(exerciseIndex)?.exerciseId ?: ""
+                val steps by detailViewModel.sessionSteps.collectAsState()
+                val currentStep = steps.getOrNull(stepIndex)
+                val exerciseName = currentStep?.exercise?.exerciseId ?: ""
 
                 ResultsScreen(
                     workoutType = exerciseName,
                     reps = reps,
                     isPr = isPr,
                     exerciseSessionId = exerciseSessionId,
+                    // §4.2: rest fires only after the last member of a superset round
+                    // completes it - never between members mid-round.
+                    showRestTimer = currentStep?.restAfter ?: true,
                     onDone = {
-                        val nextIndex = exerciseIndex + 1
-                        if (nextIndex < exercises.size) {
+                        val nextIndex = stepIndex + 1
+                        if (nextIndex < steps.size) {
                             navController.navigate(Screen.RoutineCamera.createRoute(routineId, nextIndex)) {
-                                popUpTo(Screen.RoutineCamera.createRoute(routineId, exerciseIndex)) { inclusive = true }
+                                popUpTo(Screen.RoutineCamera.createRoute(routineId, stepIndex)) { inclusive = true }
                             }
                         } else {
+                            // Routine finished — clear the resume record (§3.3) so the
+                            // next launch doesn't offer to resume a completed session.
+                            scope.launch {
+                                com.example.gymformcoach.core.data.ActiveSessionRepository(
+                                    com.example.gymformcoach.core.data.AppDatabase.getInstance(context)
+                                ).finish()
+                            }
                             navController.navigate(Screen.Home.route) {
                                 popUpTo(Screen.Home.route) { inclusive = true }
                             }

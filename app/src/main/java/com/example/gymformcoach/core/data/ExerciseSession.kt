@@ -8,7 +8,7 @@ import java.util.UUID
 data class ExerciseSession(
     @PrimaryKey val id: String = UUID.randomUUID().toString(),
     val exerciseId: String,
-    val date: Long,
+    val performedAt: Long,
     val weightKg: Float,
     val reps: Int,
     val sets: Int,

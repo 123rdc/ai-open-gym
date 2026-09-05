@@ -15,6 +15,9 @@ class DraftRoutineExercise(
     var targetReps by mutableStateOf("10")
     var targetSets by mutableStateOf("3")
 
+    /** §4.1: shared by grouped exercises; null = standalone. */
+    var supersetGroupId by mutableStateOf<String?>(null)
+
     companion object {
         fun fromWorkout(workout: Workout) = DraftRoutineExercise(
             exerciseId = workout.name,

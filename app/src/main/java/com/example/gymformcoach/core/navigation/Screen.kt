@@ -40,6 +40,23 @@ sealed class Screen(val route: String) {
         fun createRoute(bodyPart: String) = "workout_list/$bodyPart"
     }
 
+    // Weekly plan (§2)
+    object WeeklyPlan : Screen("weekly_plan")
+
+    // §17A body weight tracking
+    object BodyWeight : Screen("body_weight")
+
+    // §15 exercise library (search/filter across all body parts)
+    object ExerciseLibrary : Screen("exercise_library")
+
+    // §17.1/§17B data portability
+    object DataPortability : Screen("data_portability")
+    object PlanSharing : Screen("plan_sharing")
+    object ImportWorkouts : Screen("import_workouts")
+
+    // §17D AI training plan coach
+    object Coach : Screen("coach")
+
     // Routines
     object MyRoutines : Screen("my_routines")
     object RoutineBuilder : Screen("routine_builder")

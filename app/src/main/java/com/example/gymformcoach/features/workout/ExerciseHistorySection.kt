@@ -38,7 +38,7 @@ import java.util.Locale
 
 private const val HEATMAP_DAYS = 112 // ~16 weeks
 
-private fun startOfDay(millis: Long): Long {
+fun startOfDay(millis: Long): Long {
     val calendar = Calendar.getInstance()
     calendar.timeInMillis = millis
     calendar.set(Calendar.HOUR_OF_DAY, 0)
@@ -69,7 +69,7 @@ fun ExerciseHistorySection(exerciseName: String) {
             EmptyHistoryPlaceholder()
         } else {
             val daySummaries = sessions
-                .groupBy { startOfDay(it.date) }
+                .groupBy { startOfDay(it.performedAt) }
                 .map { (dayStart, daySessions) ->
                     DaySummary(
                         dayStart = dayStart,
@@ -141,7 +141,7 @@ private fun ExerciseHeatmap(daySummaries: List<DaySummary>) {
 }
 
 @Composable
-private fun HeatmapGrid(
+fun HeatmapGrid(
     daySummaries: List<DaySummary>,
     muted: Boolean,
     onCellClick: (DaySummary) -> Unit = {}
@@ -201,6 +201,7 @@ private fun HeatmapGrid(
 private fun ExerciseProgressionChart(daySummaries: List<DaySummary>) {
     val context = LocalContext.current
     val unit = remember { com.example.gymformcoach.core.utils.PreferenceManager(context).weightUnit }
+    val primaryColor = Primary
 
     Card(
         modifier = Modifier
@@ -235,10 +236,10 @@ private fun ExerciseProgressionChart(daySummaries: List<DaySummary>) {
                     val point = pointFor(index)
                     if (index == 0) path.moveTo(point.x, point.y) else path.lineTo(point.x, point.y)
                 }
-                drawPath(path = path, color = Primary, style = Stroke(width = 3.dp.toPx()))
+                drawPath(path = path, color = primaryColor, style = Stroke(width = 3.dp.toPx()))
 
                 daySummaries.indices.forEach { index ->
-                    drawCircle(color = Primary, radius = 4.dp.toPx(), center = pointFor(index))
+                    drawCircle(color = primaryColor, radius = 4.dp.toPx(), center = pointFor(index))
                 }
             }
 

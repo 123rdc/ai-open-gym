@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -34,6 +35,9 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+        // §2 weekly plan uses java.time (LocalDate/DayOfWeek), which is API 26+
+        // natively; minSdk here is 24.
+        isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = "1.8"
@@ -49,6 +53,9 @@ android {
 }
 
 dependencies {
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

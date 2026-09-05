@@ -31,6 +31,17 @@ class PreferenceManager(context: Context) {
         private const val KEY_AI_COACH_API_KEY = "ai_coach_api_key"
         private const val KEY_AI_COACH_MODEL = "ai_coach_model"
         private const val KEY_CLIP_RETENTION_DAYS = "clip_retention_days"
+
+        private const val KEY_KEEP_SCREEN_ON = "keep_screen_on"
+        private const val KEY_EFFORT_ENABLED = "effort_enabled"
+        private const val KEY_EFFORT_SCALE = "effort_scale"
+        private const val KEY_WORKOUT_REMINDER_ENABLED = "workout_reminder_enabled"
+        private const val KEY_WORKOUT_REMINDER_HOUR = "workout_reminder_hour"
+        private const val KEY_WORKOUT_REMINDER_MINUTE = "workout_reminder_minute"
+        private const val KEY_THEME_MODE = "theme_mode"
+        private const val KEY_ACCENT = "accent"
+        private const val KEY_BODY_FIGURE = "body_figure"
+        private const val KEY_AI_COACH_ENABLED = "ai_coach_enabled"
     }
 
     var isOnboardingComplete: Boolean
@@ -116,4 +127,52 @@ class PreferenceManager(context: Context) {
     var clipRetentionDays: Int
         get() = prefs.getInt(KEY_CLIP_RETENTION_DAYS, 30)
         set(value) = prefs.edit().putInt(KEY_CLIP_RETENTION_DAYS, value).apply()
+
+    /** §3.2: default on. */
+    var keepScreenOnDuringWorkout: Boolean
+        get() = prefs.getBoolean(KEY_KEEP_SCREEN_ON, true)
+        set(value) = prefs.edit().putBoolean(KEY_KEEP_SCREEN_ON, value).apply()
+
+    /** §10: off by default. */
+    var effortTrackingEnabled: Boolean
+        get() = prefs.getBoolean(KEY_EFFORT_ENABLED, false)
+        set(value) = prefs.edit().putBoolean(KEY_EFFORT_ENABLED, value).apply()
+
+    /** §10: "RIR" or "RPE". Historical entries keep the scale they were logged with. */
+    var effortScale: String
+        get() = prefs.getString(KEY_EFFORT_SCALE, "RIR") ?: "RIR"
+        set(value) = prefs.edit().putString(KEY_EFFORT_SCALE, value).apply()
+
+    /** §14: opt-in. */
+    var workoutReminderEnabled: Boolean
+        get() = prefs.getBoolean(KEY_WORKOUT_REMINDER_ENABLED, false)
+        set(value) = prefs.edit().putBoolean(KEY_WORKOUT_REMINDER_ENABLED, value).apply()
+
+    var workoutReminderHour: Int
+        get() = prefs.getInt(KEY_WORKOUT_REMINDER_HOUR, 18)
+        set(value) = prefs.edit().putInt(KEY_WORKOUT_REMINDER_HOUR, value).apply()
+
+    var workoutReminderMinute: Int
+        get() = prefs.getInt(KEY_WORKOUT_REMINDER_MINUTE, 0)
+        set(value) = prefs.edit().putInt(KEY_WORKOUT_REMINDER_MINUTE, value).apply()
+
+    /** §16: "dark" (the default identity) or "light". */
+    var themeMode: String
+        get() = prefs.getString(KEY_THEME_MODE, "dark") ?: "dark"
+        set(value) = prefs.edit().putString(KEY_THEME_MODE, value).apply()
+
+    /** §16: key into AccentPalette; neon green is the default identity. */
+    var accent: String
+        get() = prefs.getString(KEY_ACCENT, "neon") ?: "neon"
+        set(value) = prefs.edit().putString(KEY_ACCENT, value).apply()
+
+    /** §13.2: "male" or "female" figure for the muscle map. */
+    var bodyFigure: String
+        get() = prefs.getString(KEY_BODY_FIGURE, "male") ?: "male"
+        set(value) = prefs.edit().putString(KEY_BODY_FIGURE, value).apply()
+
+    /** §17D.1: off by default. With it disabled the app behaves exactly as everywhere else in the spec. */
+    var aiCoachEnabled: Boolean
+        get() = prefs.getBoolean(KEY_AI_COACH_ENABLED, false)
+        set(value) = prefs.edit().putBoolean(KEY_AI_COACH_ENABLED, value).apply()
 }

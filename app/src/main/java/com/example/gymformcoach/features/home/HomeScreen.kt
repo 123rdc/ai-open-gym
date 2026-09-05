@@ -44,13 +44,19 @@ fun HomeScreen(
     onNavigateToTab: (String) -> Unit,
     onCreateRoutine: () -> Unit = {},
     onRoutineSelected: (String) -> Unit = {},
-    onSeeAllRoutines: () -> Unit = {}
+    onSeeAllRoutines: () -> Unit = {},
+    onStartPlannedRoutine: (String) -> Unit = {},
+    onEditWeeklyPlan: () -> Unit = {},
+    onOpenBodyWeight: () -> Unit = {}
 ) {
     var searchQuery by remember { mutableStateOf("") }
     val bodyParts = ExerciseCatalog.bodyParts
     val context = LocalContext.current
     val routineRepository = remember { RoutineRepository(AppDatabase.getInstance(context)) }
     val routines by routineRepository.getRoutineSummaries().collectAsState(initial = emptyList())
+    val planViewModel: com.example.gymformcoach.features.plan.WeeklyPlanViewModel =
+        androidx.lifecycle.viewmodel.compose.viewModel()
+    val planState by planViewModel.uiState.collectAsState()
 
     Scaffold(
         bottomBar = {
@@ -106,6 +112,36 @@ fun HomeScreen(
             onValueChange = { searchQuery = it },
             placeholder = "Search for workouts"
         )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // §2.4: today's planned session is the primary surface.
+        com.example.gymformcoach.features.plan.TodayWorkoutCard(
+            planned = planState.today,
+            routineName = planState.todayRoutineName,
+            onStart = onStartPlannedRoutine,
+            onEditPlan = onEditWeeklyPlan
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        val sessionRepository = remember { com.example.gymformcoach.core.data.ExerciseSessionRepository(AppDatabase.getInstance(context)) }
+        val allSessions by sessionRepository.getAllSessions().collectAsState(initial = emptyList())
+        val loggedDates = remember(allSessions) {
+            allSessions.map {
+                java.time.Instant.ofEpochMilli(it.performedAt).atZone(java.time.ZoneId.systemDefault()).toLocalDate()
+            }.toSet()
+        }
+
+        WeekCalendarStrip(loggedDates = loggedDates)
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        BodyWeightPreviewCard(onOpen = onOpenBodyWeight)
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        StreakCard(stats = remember(loggedDates) { StreakCalculator.calculate(loggedDates) })
 
         Spacer(modifier = Modifier.height(24.dp))
 

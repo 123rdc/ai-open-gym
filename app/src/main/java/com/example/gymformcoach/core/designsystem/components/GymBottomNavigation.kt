@@ -12,42 +12,30 @@ fun GymBottomNavigation(
     currentRoute: String?,
     onTabSelected: (String) -> Unit
 ) {
+    val items = listOf(
+        Triple(Screen.Home.route, "Home", Icons.Default.Home),
+        Triple(Screen.WeeklyPlan.route, "Plan", Icons.Default.CalendarMonth),
+        Triple(Screen.Progress.route, "Stats", Icons.Default.TrendingUp),
+        Triple(Screen.ExerciseLibrary.route, "Exercises", Icons.Default.FitnessCenter),
+        Triple(Screen.Profile.route, "Profile", Icons.Default.Person)
+    )
+
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surface,
         contentColor = Primary
     ) {
-        NavigationBarItem(
-            icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-            label = { Text("Home") },
-            selected = currentRoute == Screen.Home.route,
-            onClick = { onTabSelected(Screen.Home.route) },
-            colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = Primary,
-                selectedTextColor = Primary,
-                indicatorColor = Primary.copy(alpha = 0.1f)
+        items.forEach { (route, label, icon) ->
+            NavigationBarItem(
+                icon = { Icon(icon, contentDescription = label) },
+                label = { Text(label) },
+                selected = currentRoute == route,
+                onClick = { onTabSelected(route) },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = Primary,
+                    selectedTextColor = Primary,
+                    indicatorColor = Primary.copy(alpha = 0.1f)
+                )
             )
-        )
-        NavigationBarItem(
-            icon = { Icon(Icons.Default.TrendingUp, contentDescription = "Progress") },
-            label = { Text("Progress") },
-            selected = currentRoute == Screen.Progress.route,
-            onClick = { onTabSelected(Screen.Progress.route) },
-            colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = Primary,
-                selectedTextColor = Primary,
-                indicatorColor = Primary.copy(alpha = 0.1f)
-            )
-        )
-        NavigationBarItem(
-            icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
-            label = { Text("Profile") },
-            selected = currentRoute == Screen.Profile.route,
-            onClick = { onTabSelected(Screen.Profile.route) },
-            colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = Primary,
-                selectedTextColor = Primary,
-                indicatorColor = Primary.copy(alpha = 0.1f)
-            )
-        )
+        }
     }
 }

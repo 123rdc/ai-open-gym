@@ -38,7 +38,11 @@ import com.example.gymformcoach.core.navigation.Screen
 @Composable
 fun ProfileScreen(
     onNavigateToTab: (String) -> Unit,
-    onOpenSettings: () -> Unit = {}
+    onOpenSettings: () -> Unit = {},
+    onOpenBodyWeight: () -> Unit = {},
+    onOpenWeeklyPlan: () -> Unit = {},
+    onOpenDataPortability: () -> Unit = {},
+    onOpenCoach: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val unit = remember { PreferenceManager(context).weightUnit }
@@ -128,6 +132,10 @@ fun ProfileScreen(
 
         // Settings Items
         ProfileItem(label = "Edit Profile")
+        ProfileItem(label = "Body Weight", onClick = onOpenBodyWeight)
+        ProfileItem(label = "Weekly Plan", onClick = onOpenWeeklyPlan)
+        ProfileItem(label = "Data & Backup", onClick = onOpenDataPortability)
+        ProfileItem(label = "AI Coach", onClick = onOpenCoach)
         ProfileItem(label = "Privacy Policy")
         ProfileItem(label = "Settings", onClick = onOpenSettings)
         ProfileItem(label = "Help Center")

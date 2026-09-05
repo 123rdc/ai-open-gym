@@ -19,6 +19,8 @@ data class UserProfile(
     val focusAreas: Set<String>,
     val sessionLengthPreference: String,
     val trainingLimitations: String,
+    /** §17A.1: null = no goal set. */
+    val goalWeightKg: Float? = null,
     val syncStatus: String = SyncStatus.SYNCED,
     val serverId: String? = null,
     val createdAt: Long = System.currentTimeMillis(),

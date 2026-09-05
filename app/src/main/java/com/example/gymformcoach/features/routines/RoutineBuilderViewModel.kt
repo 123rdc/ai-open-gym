@@ -34,11 +34,52 @@ class RoutineBuilderViewModel(application: Application) : AndroidViewModel(appli
     }
 
     fun moveUp(index: Int) {
-        if (index > 0) exercises.add(index - 1, exercises.removeAt(index))
+        if (index > 0) {
+            exercises.add(index - 1, exercises.removeAt(index))
+            repairSupersets()
+        }
     }
 
     fun moveDown(index: Int) {
-        if (index < exercises.size - 1) exercises.add(index + 1, exercises.removeAt(index))
+        if (index < exercises.size - 1) {
+            exercises.add(index + 1, exercises.removeAt(index))
+            repairSupersets()
+        }
+    }
+
+    /**
+     * §4.3/§4.4: group a contiguous run of selected exercises. Cardio is excluded
+     * (no meaningful round structure) and the caller supplies types by name since
+     * the draft only carries the catalog name.
+     */
+    fun groupAsSuperset(indices: Set<Int>, cardioExerciseNames: Set<String>): Boolean {
+        if (indices.size < 2) return false
+        val sorted = indices.sorted()
+        val contiguous = sorted.zipWithNext().all { (a, b) -> b == a + 1 }
+        if (!contiguous) return false
+        if (sorted.any { exercises[it].exerciseId in cardioExerciseNames }) return false
+
+        val groupId = java.util.UUID.randomUUID().toString()
+        sorted.forEach { exercises[it].supersetGroupId = groupId }
+        return true
+    }
+
+    fun ungroupSuperset(groupId: String) {
+        exercises.filter { it.supersetGroupId == groupId }.forEach { it.supersetGroupId = null }
+    }
+
+    /**
+     * Reordering can pull a member out of its group's contiguous block. Drop the
+     * whole group rather than persisting one that no longer sequences correctly.
+     */
+    private fun repairSupersets() {
+        val positionsByGroup = exercises.withIndex()
+            .mapNotNull { (index, ex) -> ex.supersetGroupId?.let { it to index } }
+            .groupBy({ it.first }, { it.second })
+        positionsByGroup.forEach { (groupId, positions) ->
+            val contiguous = positions.zipWithNext().all { (a, b) -> b == a + 1 }
+            if (!contiguous) ungroupSuperset(groupId)
+        }
     }
 
     fun saveRoutine(onSaved: (String) -> Unit) {
@@ -50,7 +91,8 @@ class RoutineBuilderViewModel(application: Application) : AndroidViewModel(appli
                 orderIndex = index,
                 targetWeightKg = draft.targetWeightKg.toFloatOrNull() ?: 0f,
                 targetReps = draft.targetReps.toIntOrNull() ?: 0,
-                targetSets = draft.targetSets.toIntOrNull() ?: 0
+                targetSets = draft.targetSets.toIntOrNull() ?: 0,
+                supersetGroupId = draft.supersetGroupId
             )
         }
         viewModelScope.launch {

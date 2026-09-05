@@ -1,13 +1,5 @@
 package com.example.gymformcoach.features.workout
 
-import android.content.Context
-import android.media.AudioAttributes
-import android.media.RingtoneManager
-import android.os.Build
-import android.os.VibrationEffect
-import android.os.Vibrator
-import android.os.VibratorManager
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -18,9 +10,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -33,32 +27,59 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gymformcoach.core.designsystem.Primary
 import com.example.gymformcoach.core.designsystem.TextSecondary
+import com.example.gymformcoach.core.notifications.RestTimerScheduler
 import kotlinx.coroutines.delay
 
-private val REST_PRESETS = listOf(90, 120, 180)
+/** §7.1 presets. */
+private val REST_PRESETS = listOf(60, 90, 120, 180)
 
+/**
+ * §7: rest timer.
+ *
+ * The countdown is derived from a wall-clock end timestamp, and completion is
+ * scheduled with AlarmManager (§7.2) — a tick-counting coroutine dies with the UI,
+ * so returning to the app after 40s of a 90s rest would wrongly show 90s and the
+ * alert would never fire with the screen off. The receiver owns the
+ * vibration/sound; this composable only draws.
+ */
 @Composable
 fun RestTimerCard(
     initialSeconds: Int,
     onDurationChange: (Int) -> Unit
 ) {
     val context = LocalContext.current
+    var durationSeconds by remember { mutableIntStateOf(initialSeconds) }
+    var endAtMillis by remember { mutableLongStateOf(0L) }
     var remainingSeconds by remember { mutableIntStateOf(initialSeconds) }
-    var isRunning by remember { mutableStateOf(true) }
-    var hasAlerted by remember { mutableStateOf(false) }
+    var isPaused by remember { mutableStateOf(false) }
 
-    LaunchedEffect(isRunning, remainingSeconds) {
-        if (isRunning && remainingSeconds > 0) {
-            delay(1000)
-            remainingSeconds -= 1
+    fun startRest(seconds: Int) {
+        durationSeconds = seconds
+        remainingSeconds = seconds
+        isPaused = false
+        endAtMillis = RestTimerScheduler.schedule(context, seconds)
+    }
+
+    // Auto-starts on entry (§7.1: fires on set completion, and this card is shown
+    // by the results screen at exactly that moment).
+    LaunchedEffect(Unit) { startRest(initialSeconds) }
+
+    LaunchedEffect(endAtMillis, isPaused) {
+        if (isPaused || endAtMillis == 0L) return@LaunchedEffect
+        while (true) {
+            val left = ((endAtMillis - System.currentTimeMillis()) / 1000L).toInt()
+            remainingSeconds = left.coerceAtLeast(0)
+            if (left <= 0) {
+                endAtMillis = 0L
+                break
+            }
+            delay(250)
         }
     }
 
-    LaunchedEffect(remainingSeconds) {
-        if (remainingSeconds == 0 && !hasAlerted) {
-            hasAlerted = true
-            triggerRestCompleteAlert(context)
-        }
+    // Leaving the screen must not leave an alarm queued to fire later out of context.
+    DisposableEffect(Unit) {
+        onDispose { RestTimerScheduler.cancel(context) }
     }
 
     Card(
@@ -79,6 +100,7 @@ fun RestTimerCard(
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(8.dp))
+            // §7.3: largest type on the screen, legible from arm's length.
             Text(
                 text = formatRestTime(remainingSeconds),
                 fontSize = 64.sp,
@@ -91,9 +113,7 @@ fun RestTimerCard(
                 REST_PRESETS.forEach { preset ->
                     OutlinedButton(
                         onClick = {
-                            remainingSeconds = preset
-                            isRunning = true
-                            hasAlerted = false
+                            startRest(preset)
                             onDurationChange(preset)
                         },
                         colors = ButtonDefaults.outlinedButtonColors(contentColor = Primary)
@@ -110,14 +130,36 @@ fun RestTimerCard(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 OutlinedButton(
-                    onClick = { remainingSeconds += 30 },
+                    onClick = { if (remainingSeconds > 0) startRest(remainingSeconds + 30) },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White)
                 ) {
                     Text("+30s")
                 }
+                OutlinedButton(
+                    onClick = {
+                        if (isPaused) {
+                            isPaused = false
+                            endAtMillis = RestTimerScheduler.schedule(context, remainingSeconds)
+                        } else {
+                            RestTimerScheduler.cancel(context)
+                            isPaused = true
+                            endAtMillis = 0L
+                        }
+                    },
+                    modifier = Modifier.weight(1f),
+                    enabled = remainingSeconds > 0,
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White)
+                ) {
+                    Text(if (isPaused) "Resume" else "Pause")
+                }
                 Button(
-                    onClick = { remainingSeconds = 0 },
+                    onClick = {
+                        RestTimerScheduler.cancel(context)
+                        endAtMillis = 0L
+                        isPaused = false
+                        remainingSeconds = 0
+                    },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(containerColor = Primary)
                 ) {
@@ -132,27 +174,4 @@ private fun formatRestTime(totalSeconds: Int): String {
     val minutes = totalSeconds / 60
     val seconds = totalSeconds % 60
     return "%d:%02d".format(minutes, seconds)
-}
-
-private fun triggerRestCompleteAlert(context: Context) {
-    val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        (context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager).defaultVibrator
-    } else {
-        @Suppress("DEPRECATION")
-        context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-    }
-    if (vibrator.hasVibrator()) {
-        vibrator.vibrate(VibrationEffect.createOneShot(400, VibrationEffect.DEFAULT_AMPLITUDE))
-    }
-
-    try {
-        val notificationUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        val ringtone = RingtoneManager.getRingtone(context, notificationUri)
-        ringtone.audioAttributes = AudioAttributes.Builder()
-            .setUsage(AudioAttributes.USAGE_NOTIFICATION_EVENT)
-            .build()
-        ringtone.play()
-    } catch (_: Exception) {
-        // Best-effort alert sound; a playback failure shouldn't crash the rest timer.
-    }
 }

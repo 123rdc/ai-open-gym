@@ -26,6 +26,14 @@ data class RoutineExercise(
     val targetWeightKg: Float,
     val targetReps: Int,
     val targetSets: Int,
+    /** §4.1: UUID shared by grouped exercises; null = standalone. */
+    val supersetGroupId: String? = null,
+    /** §5.1 resolution: this override → the routine's default → NONE. */
+    val progressionRuleOverride: String? = null,
+    val incrementKg: Float = 2.5f,
+    val repRangeMin: Int = 8,
+    val repRangeMax: Int = 12,
+    val targetDurationSeconds: Int = 30,
     val syncStatus: String = SyncStatus.SYNCED,
     val serverId: String? = null,
     val createdAt: Long = System.currentTimeMillis(),

@@ -1,0 +1,578 @@
+{
+  "app/build.gradle.kts": {
+    "mtime": 1787865707.3138344,
+    "seen": 1788553272.5753248,
+    "ast_hash": "5f583d6a8f5ad2f974251b658c95185b",
+    "semantic_hash": "5f583d6a8f5ad2f974251b658c95185b"
+  },
+  "app/src/main/assets/correctives_kb.json": {
+    "mtime": 1788036732.3551283,
+    "seen": 1788553272.5753248,
+    "ast_hash": "6ec1c6b90c0f2a956073f49906c02ee0",
+    "semantic_hash": "6ec1c6b90c0f2a956073f49906c02ee0"
+  },
+  "app/src/main/java/com/example/gymformcoach/MainActivity.kt": {
+    "mtime": 1788036815.4280665,
+    "seen": 1788553272.5753248,
+    "ast_hash": "1dbca010960303fca357cd79ef24e60e",
+    "semantic_hash": "1dbca010960303fca357cd79ef24e60e"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/analysis/AiCoachApiClient.kt": {
+    "mtime": 1788037263.1159835,
+    "seen": 1788553272.5753248,
+    "ast_hash": "76e8c2e6e3d43f26a594cfbe926dd433",
+    "semantic_hash": "76e8c2e6e3d43f26a594cfbe926dd433"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/analysis/CorrectivesKnowledgeBase.kt": {
+    "mtime": 1788036738.3628519,
+    "seen": 1788553272.5753248,
+    "ast_hash": "135900926e99232456947afbf456067c",
+    "semantic_hash": "135900926e99232456947afbf456067c"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/analysis/PostSetAnalysisRunner.kt": {
+    "mtime": 1788037309.6914966,
+    "seen": 1788553272.5753248,
+    "ast_hash": "aff2f8caf01bd77b73c1ab568ee07b31",
+    "semantic_hash": "aff2f8caf01bd77b73c1ab568ee07b31"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/analysis/PostSetAnalysisStatusBus.kt": {
+    "mtime": 1788036752.8100114,
+    "seen": 1788553272.5753248,
+    "ast_hash": "8cc5156747512194d543df8611ad92cb",
+    "semantic_hash": "8cc5156747512194d543df8611ad92cb"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/data/AppDatabase.kt": {
+    "mtime": 1788036610.0127351,
+    "seen": 1788553272.5753248,
+    "ast_hash": "0464ddd0c22cbf1043839360a076eb41",
+    "semantic_hash": "0464ddd0c22cbf1043839360a076eb41"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/data/Converters.kt": {
+    "mtime": 1788036531.8108416,
+    "seen": 1788553272.5753248,
+    "ast_hash": "121e3e95ce35b31e5abd3a15daa410fa",
+    "semantic_hash": "121e3e95ce35b31e5abd3a15daa410fa"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/data/ExerciseSession.kt": {
+    "mtime": 1788036535.1148455,
+    "seen": 1788553272.5753248,
+    "ast_hash": "7c79125aadfa9910acc45f271b43c31f",
+    "semantic_hash": "7c79125aadfa9910acc45f271b43c31f"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/data/ExerciseSessionDao.kt": {
+    "mtime": 1787866788.1158237,
+    "seen": 1788553272.5753248,
+    "ast_hash": "59743060d0c1e6ccb6dd7239f42e25c1",
+    "semantic_hash": "59743060d0c1e6ccb6dd7239f42e25c1"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/data/ExerciseSessionRepository.kt": {
+    "mtime": 1788036566.7027135,
+    "seen": 1788553272.5753248,
+    "ast_hash": "2a3928f0126cb965c681a51138e9faba",
+    "semantic_hash": "2a3928f0126cb965c681a51138e9faba"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/data/ProfileRepository.kt": {
+    "mtime": 1788036559.1114967,
+    "seen": 1788553272.5753248,
+    "ast_hash": "fdeeed6cc17073d3d59a681c3f690345",
+    "semantic_hash": "fdeeed6cc17073d3d59a681c3f690345"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/data/Routine.kt": {
+    "mtime": 1788036538.168369,
+    "seen": 1788553272.5753248,
+    "ast_hash": "8d00371960c3791a4b97b2fe66862f96",
+    "semantic_hash": "8d00371960c3791a4b97b2fe66862f96"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/data/RoutineDao.kt": {
+    "mtime": 1788036573.2379413,
+    "seen": 1788553272.5753248,
+    "ast_hash": "3cc1e0e81baacf50f6b2efe26b6b502a",
+    "semantic_hash": "3cc1e0e81baacf50f6b2efe26b6b502a"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/data/RoutineExercise.kt": {
+    "mtime": 1788036542.2676246,
+    "seen": 1788553272.5753248,
+    "ast_hash": "4f6ec5fb0c968f72ce455f904343ae63",
+    "semantic_hash": "4f6ec5fb0c968f72ce455f904343ae63"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/data/RoutineRepository.kt": {
+    "mtime": 1788036579.8507483,
+    "seen": 1788553272.5753248,
+    "ast_hash": "b772f4f2089f238b6e344f052ae1dccd",
+    "semantic_hash": "b772f4f2089f238b6e344f052ae1dccd"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/data/RoutineSummary.kt": {
+    "mtime": 1788036544.6395917,
+    "seen": 1788553272.5753248,
+    "ast_hash": "549410a9f56dc126fdab03c2d008739f",
+    "semantic_hash": "549410a9f56dc126fdab03c2d008739f"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/data/SetAnalysis.kt": {
+    "mtime": 1788036616.175422,
+    "seen": 1788553272.5753248,
+    "ast_hash": "17063229ab861e71a337314e78be9f04",
+    "semantic_hash": "17063229ab861e71a337314e78be9f04"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/data/SetAnalysisDao.kt": {
+    "mtime": 1788036618.9750204,
+    "seen": 1788553272.5753248,
+    "ast_hash": "a8e4b13a7045722507ad0197785cc23a",
+    "semantic_hash": "a8e4b13a7045722507ad0197785cc23a"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/data/SetAnalysisRepository.kt": {
+    "mtime": 1788036621.871636,
+    "seen": 1788553272.5753248,
+    "ast_hash": "2611ecbdd71152f83571e780212c9413",
+    "semantic_hash": "2611ecbdd71152f83571e780212c9413"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/data/SyncStatus.kt": {
+    "mtime": 1788036528.517546,
+    "seen": 1788553272.5753248,
+    "ast_hash": "5bfb20f083e2756b8ab6facbd1025b2f",
+    "semantic_hash": "5bfb20f083e2756b8ab6facbd1025b2f"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/data/UserProfile.kt": {
+    "mtime": 1788036548.7555723,
+    "seen": 1788553272.5753248,
+    "ast_hash": "deb75c9201688364da33061a22e6f660",
+    "semantic_hash": "deb75c9201688364da33061a22e6f660"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/data/UserProfileDao.kt": {
+    "mtime": 1788036552.2297225,
+    "seen": 1788553272.5753248,
+    "ast_hash": "d45b08b41e724d36e6c0f8fc7f927577",
+    "semantic_hash": "d45b08b41e724d36e6c0f8fc7f927577"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/designsystem/Color.kt": {
+    "mtime": 1787432623.23977,
+    "seen": 1788553272.5753248,
+    "ast_hash": "afd155c4b274e0a956b52b9e2acd167d",
+    "semantic_hash": "afd155c4b274e0a956b52b9e2acd167d"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/designsystem/Theme.kt": {
+    "mtime": 1787432625.7812557,
+    "seen": 1788553272.5753248,
+    "ast_hash": "46fdd02e296095ee941799971546bb91",
+    "semantic_hash": "46fdd02e296095ee941799971546bb91"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/designsystem/Type.kt": {
+    "mtime": 1787432631.1698895,
+    "seen": 1788553272.5753248,
+    "ast_hash": "44c7cc82d8e468a78667faf5e23f1883",
+    "semantic_hash": "44c7cc82d8e468a78667faf5e23f1883"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/designsystem/components/GymBottomNavigation.kt": {
+    "mtime": 1787596111.2453153,
+    "seen": 1788553272.5753248,
+    "ast_hash": "956262ddc075521fdc77751359a2b835",
+    "semantic_hash": "956262ddc075521fdc77751359a2b835"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/designsystem/components/PrimaryButton.kt": {
+    "mtime": 1787432640.6727686,
+    "seen": 1788553272.5753248,
+    "ast_hash": "a025817d8baba6742eb13fac20f90ebb",
+    "semantic_hash": "a025817d8baba6742eb13fac20f90ebb"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/designsystem/components/SearchField.kt": {
+    "mtime": 1787432629.0874014,
+    "seen": 1788553272.5753248,
+    "ast_hash": "d0794f3388ef7e2621d4f9e33b90296a",
+    "semantic_hash": "d0794f3388ef7e2621d4f9e33b90296a"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/designsystem/components/WorkoutCategoryCard.kt": {
+    "mtime": 1787432636.6788704,
+    "seen": 1788553272.5753248,
+    "ast_hash": "af9bb126fdfba663f5b386fdc823a050",
+    "semantic_hash": "af9bb126fdfba663f5b386fdc823a050"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/ml/PoseLandmarkerHelper.kt": {
+    "mtime": 1787593262.1425812,
+    "seen": 1788553272.5753248,
+    "ast_hash": "40abd6435d60e65dd6370c6506723fe1",
+    "semantic_hash": "40abd6435d60e65dd6370c6506723fe1"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/ml/PoseUtils.kt": {
+    "mtime": 1787593321.633826,
+    "seen": 1788553272.5753248,
+    "ast_hash": "ca34b8d310152a0a033a719bf1ffd928",
+    "semantic_hash": "ca34b8d310152a0a033a719bf1ffd928"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/navigation/NavGraph.kt": {
+    "mtime": 1788036872.4885905,
+    "seen": 1788553272.5753248,
+    "ast_hash": "982c852050b45cad75c7b434f0a5b404",
+    "semantic_hash": "982c852050b45cad75c7b434f0a5b404"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/navigation/Screen.kt": {
+    "mtime": 1788036706.4713948,
+    "seen": 1788553272.5753248,
+    "ast_hash": "bba760079321174be1fd06a3bd5f79a5",
+    "semantic_hash": "bba760079321174be1fd06a3bd5f79a5"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/recommendation/RecommendationEngine.kt": {
+    "mtime": 1787866407.275356,
+    "seen": 1788553272.5753248,
+    "ast_hash": "54c2f8c19385ccc602e101665b44f7b6",
+    "semantic_hash": "54c2f8c19385ccc602e101665b44f7b6"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/utils/BiometricHelper.kt": {
+    "mtime": 1787594172.8123963,
+    "seen": 1788553272.5753248,
+    "ast_hash": "b24b190206e59cefcb9872052bfd19fd",
+    "semantic_hash": "b24b190206e59cefcb9872052bfd19fd"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/utils/PrEstimator.kt": {
+    "mtime": 1787866782.046882,
+    "seen": 1788553272.5753248,
+    "ast_hash": "006c77d3832c987f21290ff81846c782",
+    "semantic_hash": "006c77d3832c987f21290ff81846c782"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/utils/PreferenceManager.kt": {
+    "mtime": 1788037251.6464562,
+    "seen": 1788553272.5753248,
+    "ast_hash": "51dbff869dad3b872d49d33e6e1895f8",
+    "semantic_hash": "51dbff869dad3b872d49d33e6e1895f8"
+  },
+  "app/src/main/java/com/example/gymformcoach/core/utils/WeightUnit.kt": {
+    "mtime": 1787866560.3583145,
+    "seen": 1788553272.5753248,
+    "ast_hash": "7901da0a3e8af22a00044c4eeb84e3e8",
+    "semantic_hash": "7901da0a3e8af22a00044c4eeb84e3e8"
+  },
+  "app/src/main/java/com/example/gymformcoach/features/auth/LaunchScreen.kt": {
+    "mtime": 1787594319.751626,
+    "seen": 1788553272.5753248,
+    "ast_hash": "c63d6be76e92d0576be81f5b9f1f8104",
+    "semantic_hash": "c63d6be76e92d0576be81f5b9f1f8104"
+  },
+  "app/src/main/java/com/example/gymformcoach/features/auth/LoginScreen.kt": {
+    "mtime": 1787595551.2275543,
+    "seen": 1788553272.5753248,
+    "ast_hash": "13ce05a991c1d62f0c8211619c6a1a0f",
+    "semantic_hash": "13ce05a991c1d62f0c8211619c6a1a0f"
+  },
+  "app/src/main/java/com/example/gymformcoach/features/auth/SignUpScreen.kt": {
+    "mtime": 1787594623.7113268,
+    "seen": 1788553272.5753248,
+    "ast_hash": "fd8f368476be382a328ffc48e2448265",
+    "semantic_hash": "fd8f368476be382a328ffc48e2448265"
+  },
+  "app/src/main/java/com/example/gymformcoach/features/home/HomeScreen.kt": {
+    "mtime": 1788036666.4953012,
+    "seen": 1788553272.5753248,
+    "ast_hash": "b7b30572476ca49baa3e167ca032b1d2",
+    "semantic_hash": "b7b30572476ca49baa3e167ca032b1d2"
+  },
+  "app/src/main/java/com/example/gymformcoach/features/onboarding/OnboardingScreen.kt": {
+    "mtime": 1787594823.0296319,
+    "seen": 1788553272.5753248,
+    "ast_hash": "ad96a4ad7a0b92f700b0f5d97482d030",
+    "semantic_hash": "ad96a4ad7a0b92f700b0f5d97482d030"
+  },
+  "app/src/main/java/com/example/gymformcoach/features/profile/ProfileScreen.kt": {
+    "mtime": 1788036657.8420317,
+    "seen": 1788553272.5753248,
+    "ast_hash": "47f0c49329eae78ec6b0226cb3019b4b",
+    "semantic_hash": "47f0c49329eae78ec6b0226cb3019b4b"
+  },
+  "app/src/main/java/com/example/gymformcoach/features/profile/SettingsScreen.kt": {
+    "mtime": 1788037306.327293,
+    "seen": 1788553272.5753248,
+    "ast_hash": "17549b2c519fd8d485432b716e42ab0c",
+    "semantic_hash": "17549b2c519fd8d485432b716e42ab0c"
+  },
+  "app/src/main/java/com/example/gymformcoach/features/routines/DraftRoutineExercise.kt": {
+    "mtime": 1787866089.7286532,
+    "seen": 1788553272.5753248,
+    "ast_hash": "765be0c9c142dae7bbce35d7bd2ac767",
+    "semantic_hash": "765be0c9c142dae7bbce35d7bd2ac767"
+  },
+  "app/src/main/java/com/example/gymformcoach/features/routines/RoutineBuilderScreen.kt": {
+    "mtime": 1788036689.0515196,
+    "seen": 1788553272.5753248,
+    "ast_hash": "8a82fd2738ed5d5c5edd6bb65c0097fe",
+    "semantic_hash": "8a82fd2738ed5d5c5edd6bb65c0097fe"
+  },
+  "app/src/main/java/com/example/gymformcoach/features/routines/RoutineBuilderViewModel.kt": {
+    "mtime": 1788036680.2024055,
+    "seen": 1788553272.5753248,
+    "ast_hash": "8d8645f07cd3a8bf51c65d8efa005421",
+    "semantic_hash": "8d8645f07cd3a8bf51c65d8efa005421"
+  },
+  "app/src/main/java/com/example/gymformcoach/features/routines/RoutineDetailScreen.kt": {
+    "mtime": 1788036691.7823818,
+    "seen": 1788553272.5753248,
+    "ast_hash": "bee47612bd4a77fc23198c4ee9476c96",
+    "semantic_hash": "bee47612bd4a77fc23198c4ee9476c96"
+  },
+  "app/src/main/java/com/example/gymformcoach/features/routines/RoutineDetailViewModel.kt": {
+    "mtime": 1788036676.488109,
+    "seen": 1788553272.5753248,
+    "ast_hash": "2840631eac88153f0ddc6b16ff74103b",
+    "semantic_hash": "2840631eac88153f0ddc6b16ff74103b"
+  },
+  "app/src/main/java/com/example/gymformcoach/features/routines/RoutineListScreen.kt": {
+    "mtime": 1788036670.7281582,
+    "seen": 1788553272.5753248,
+    "ast_hash": "64643c336a9a356255ed93b87cec82b0",
+    "semantic_hash": "64643c336a9a356255ed93b87cec82b0"
+  },
+  "app/src/main/java/com/example/gymformcoach/features/routines/RoutinePickBodyPartScreen.kt": {
+    "mtime": 1787866263.158504,
+    "seen": 1788553272.5753248,
+    "ast_hash": "e9edef7a3ca7a4bf511707532875c62b",
+    "semantic_hash": "e9edef7a3ca7a4bf511707532875c62b"
+  },
+  "app/src/main/java/com/example/gymformcoach/features/setup/SetupScreens.kt": {
+    "mtime": 1787866389.6816826,
+    "seen": 1788553272.5753248,
+    "ast_hash": "9027174974690302f3b873182b2d3a3d",
+    "semantic_hash": "9027174974690302f3b873182b2d3a3d"
+  },
+  "app/src/main/java/com/example/gymformcoach/features/setup/fingerprint/SetFingerprintScreen.kt": {
+    "mtime": 1788036884.536728,
+    "seen": 1788553272.5753248,
+    "ast_hash": "5e8591e6e431ec248b332684785aad02",
+    "semantic_hash": "5e8591e6e431ec248b332684785aad02"
+  },
+  "app/src/main/java/com/example/gymformcoach/features/workout/CameraScreen.kt": {
+    "mtime": 1788036816.887835,
+    "seen": 1788553272.5753248,
+    "ast_hash": "0dff82e5f2abc21ee07c699e22c49ecc",
+    "semantic_hash": "0dff82e5f2abc21ee07c699e22c49ecc"
+  },
+  "app/src/main/java/com/example/gymformcoach/features/workout/CameraViewModel.kt": {
+    "mtime": 1788036789.998046,
+    "seen": 1788553272.5753248,
+    "ast_hash": "e08605fb0103956b8f091362dfb319c4",
+    "semantic_hash": "e08605fb0103956b8f091362dfb319c4"
+  },
+  "app/src/main/java/com/example/gymformcoach/features/workout/ExerciseHistorySection.kt": {
+    "mtime": 1788036652.5299196,
+    "seen": 1788553272.5753248,
+    "ast_hash": "26ec4a18bb03ce42062153efbef0ea30",
+    "semantic_hash": "26ec4a18bb03ce42062153efbef0ea30"
+  },
+  "app/src/main/java/com/example/gymformcoach/features/workout/HistoryScreen.kt": {
+    "mtime": 1787432681.9640667,
+    "seen": 1788553272.5753248,
+    "ast_hash": "7312547ce4543ac60ce6d3515710f176",
+    "semantic_hash": "7312547ce4543ac60ce6d3515710f176"
+  },
+  "app/src/main/java/com/example/gymformcoach/features/workout/ProgressScreen.kt": {
+    "mtime": 1787596203.36945,
+    "seen": 1788553272.5753248,
+    "ast_hash": "e83cf0c34d0c0a34843e0d0979d89d06",
+    "semantic_hash": "e83cf0c34d0c0a34843e0d0979d89d06"
+  },
+  "app/src/main/java/com/example/gymformcoach/features/workout/RestTimer.kt": {
+    "mtime": 1787866677.5725381,
+    "seen": 1788553272.5753248,
+    "ast_hash": "d6c5c7c3ea515bb34992e802f4eaacc1",
+    "semantic_hash": "d6c5c7c3ea515bb34992e802f4eaacc1"
+  },
+  "app/src/main/java/com/example/gymformcoach/features/workout/ResultsScreen.kt": {
+    "mtime": 1788036841.7375228,
+    "seen": 1788553272.5753248,
+    "ast_hash": "abcc8a142012f7b0ace7292ee5cd9052",
+    "semantic_hash": "abcc8a142012f7b0ace7292ee5cd9052"
+  },
+  "app/src/main/java/com/example/gymformcoach/features/workout/WorkoutListScreen.kt": {
+    "mtime": 1788036605.5159404,
+    "seen": 1788553272.5753248,
+    "ast_hash": "f1ab515ff96f58f9be20cfd20f958583",
+    "semantic_hash": "f1ab515ff96f58f9be20cfd20f958583"
+  },
+  "build.gradle.kts": {
+    "mtime": 1787865701.3766396,
+    "seen": 1788553272.5753248,
+    "ast_hash": "8b31ba703209442c345b7dc67af1b7e2",
+    "semantic_hash": "8b31ba703209442c345b7dc67af1b7e2"
+  },
+  "gradlew": {
+    "mtime": 1787428424.8428738,
+    "seen": 1788553272.5753248,
+    "ast_hash": "780b1d3e23a3b82154795f73df943a14",
+    "semantic_hash": "780b1d3e23a3b82154795f73df943a14"
+  },
+  "settings.gradle.kts": {
+    "mtime": 1787427590.1799521,
+    "seen": 1788553272.5753248,
+    "ast_hash": "f7c347895824f19d672d5e943a6007c8",
+    "semantic_hash": "f7c347895824f19d672d5e943a6007c8"
+  },
+  "workout_database.artifact.md": {
+    "mtime": 1787864992.1665912,
+    "seen": 1788553272.5753248,
+    "ast_hash": "a99e93d065298c195ddc0e6798152983",
+    "semantic_hash": "a99e93d065298c195ddc0e6798152983"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/1 - A - Launch.png": {
+    "mtime": 1787432495.18695,
+    "seen": 1788553272.5753248,
+    "ast_hash": "d938c4387cf3c8696f0ecafaf56a09b2",
+    "semantic_hash": "d938c4387cf3c8696f0ecafaf56a09b2"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/10 - A - Articles & Tips.png": {
+    "mtime": 1787432494.4031446,
+    "seen": 1788553272.5753248,
+    "ast_hash": "4d19523bf0174307680f45dbb9a28403",
+    "semantic_hash": "4d19523bf0174307680f45dbb9a28403"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/10 - B - Articles & Tips.png": {
+    "mtime": 1787432494.391957,
+    "seen": 1788553272.5753248,
+    "ast_hash": "4e74631b6db1174bb23f80bb0838adb2",
+    "semantic_hash": "4e74631b6db1174bb23f80bb0838adb2"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/11.1 - A - Home.png": {
+    "mtime": 1787432494.3838708,
+    "seen": 1788553272.5753248,
+    "ast_hash": "4c46215aa781a88d1562bb80fd8993ed",
+    "semantic_hash": "4c46215aa781a88d1562bb80fd8993ed"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/11.2 - A - Workout Videos.png": {
+    "mtime": 1787432494.3741422,
+    "seen": 1788553272.5753248,
+    "ast_hash": "5f60261c15a01ee9fc6c4a98e3feb8f0",
+    "semantic_hash": "5f60261c15a01ee9fc6c4a98e3feb8f0"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/11.2 - B - Workout Videos.png": {
+    "mtime": 1787432494.3637512,
+    "seen": 1788553272.5753248,
+    "ast_hash": "2c58f44ad4f661c716b7d2399d46e3b1",
+    "semantic_hash": "2c58f44ad4f661c716b7d2399d46e3b1"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/11.2 - C - Workout Videos.png": {
+    "mtime": 1787432494.3556993,
+    "seen": 1788553272.5753248,
+    "ast_hash": "3eeb35ba08295d8fbfdf56b8961085c3",
+    "semantic_hash": "3eeb35ba08295d8fbfdf56b8961085c3"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/11.2.1 - A - Articles & Tips.png": {
+    "mtime": 1787432494.3461607,
+    "seen": 1788553272.5753248,
+    "ast_hash": "4d19523bf0174307680f45dbb9a28403",
+    "semantic_hash": "4d19523bf0174307680f45dbb9a28403"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/11.2.1 - B - Articles & Tips.png": {
+    "mtime": 1787432494.3366306,
+    "seen": 1788553272.5753248,
+    "ast_hash": "4e74631b6db1174bb23f80bb0838adb2",
+    "semantic_hash": "4e74631b6db1174bb23f80bb0838adb2"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/11.3.1 - A - Favoritess.png": {
+    "mtime": 1787432494.3273613,
+    "seen": 1788553272.5753248,
+    "ast_hash": "6d36fa6717509c8cbf03ccd728d393e1",
+    "semantic_hash": "6d36fa6717509c8cbf03ccd728d393e1"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/11.3.2 - A- Favorites - Video.png": {
+    "mtime": 1787432494.318654,
+    "seen": 1788553272.5753248,
+    "ast_hash": "a339baa6eaeaa2b05d5b6a48101c561d",
+    "semantic_hash": "a339baa6eaeaa2b05d5b6a48101c561d"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/11.3.3 - A- Favorites - articles.png": {
+    "mtime": 1787432494.3097742,
+    "seen": 1788553272.5753248,
+    "ast_hash": "cdbbc3b612b84ae983407d1885a3dfc0",
+    "semantic_hash": "cdbbc3b612b84ae983407d1885a3dfc0"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/11.4.1 - B - Help & FAQs.png": {
+    "mtime": 1787432494.2927308,
+    "seen": 1788553272.5753248,
+    "ast_hash": "960bb9fd41f8368f752e7c6096f02688",
+    "semantic_hash": "960bb9fd41f8368f752e7c6096f02688"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/11.4.1 - C - Customer Service.png": {
+    "mtime": 1787432494.2856967,
+    "seen": 1788553272.5753248,
+    "ast_hash": "9260a735cf4d4587dd6fd0a71e8c288f",
+    "semantic_hash": "9260a735cf4d4587dd6fd0a71e8c288f"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/11.4.1 -A- Help Center.png": {
+    "mtime": 1787432494.3006904,
+    "seen": 1788553272.5753248,
+    "ast_hash": "6865fae50849fc975b99719d2c85e9a9",
+    "semantic_hash": "6865fae50849fc975b99719d2c85e9a9"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/11.4.2 - A- Online support.png": {
+    "mtime": 1787432494.2771342,
+    "seen": 1788553272.5753248,
+    "ast_hash": "a1b3f2eca9b121426a3c00c966041b2c",
+    "semantic_hash": "a1b3f2eca9b121426a3c00c966041b2c"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/2 - A - On boarding.png": {
+    "mtime": 1787432495.1786222,
+    "seen": 1788553272.5753248,
+    "ast_hash": "dcc9d56d948415df3d96216e0fa82fbd",
+    "semantic_hash": "dcc9d56d948415df3d96216e0fa82fbd"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/2 - B - On boarding.png": {
+    "mtime": 1787432495.164609,
+    "seen": 1788553272.5753248,
+    "ast_hash": "0522b9d7b45c06fe86d989d085102868",
+    "semantic_hash": "0522b9d7b45c06fe86d989d085102868"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/2 - C - On boarding.png": {
+    "mtime": 1787432495.152379,
+    "seen": 1788553272.5753248,
+    "ast_hash": "94223f509386f98e9b0065b46291c1ca",
+    "semantic_hash": "94223f509386f98e9b0065b46291c1ca"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/2 - D - On boarding.png": {
+    "mtime": 1787432495.141842,
+    "seen": 1788553272.5753248,
+    "ast_hash": "837966b4b61cf706827bb862ad10b28e",
+    "semantic_hash": "837966b4b61cf706827bb862ad10b28e"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/5 - A - Home.png": {
+    "mtime": 1787432494.980753,
+    "seen": 1788553272.5753248,
+    "ast_hash": "8d9eb8965de97f30f108f341e71e5d1e",
+    "semantic_hash": "8d9eb8965de97f30f108f341e71e5d1e"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/6.1 - A - Profile.png": {
+    "mtime": 1787432494.9719613,
+    "seen": 1788553272.5753248,
+    "ast_hash": "229964539cdbb02144c0afff6c9179d6",
+    "semantic_hash": "229964539cdbb02144c0afff6c9179d6"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/7.1.1 - A - Beginner.png": {
+    "mtime": 1787432494.8349564,
+    "seen": 1788553272.5753248,
+    "ast_hash": "53b1be805510292d84ed302d2847de4a",
+    "semantic_hash": "53b1be805510292d84ed302d2847de4a"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/7.2.1 - A - Workout logs.png": {
+    "mtime": 1787432494.714161,
+    "seen": 1788553272.5753248,
+    "ast_hash": "75c606252060d8b110b92802b7a90026",
+    "semantic_hash": "75c606252060d8b110b92802b7a90026"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/7.2.2 - A - Progress Tracking.png": {
+    "mtime": 1787432494.7067413,
+    "seen": 1788553272.5753248,
+    "ast_hash": "fa4289b1a265eba3befa661f3cf2d5f7",
+    "semantic_hash": "fa4289b1a265eba3befa661f3cf2d5f7"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/7.3.1 - A - Meal Plans.png": {
+    "mtime": 1787432494.6865215,
+    "seen": 1788553272.5753248,
+    "ast_hash": "5ef31d6c0ca49fd1fabef396b81dd0b9",
+    "semantic_hash": "5ef31d6c0ca49fd1fabef396b81dd0b9"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/7.4 - A - Community.png": {
+    "mtime": 1787432494.525447,
+    "seen": 1788553272.5753248,
+    "ast_hash": "a8e84b0d94c8ddb64376a221f39a4a14",
+    "semantic_hash": "a8e84b0d94c8ddb64376a221f39a4a14"
+  },
+  "Fitness App UI Kit for Gym Workout App Fitness Tracker Mobile App Gym Fitness Mobile App UI Kit (Community)/9 - A - Weekly Challenge.png": {
+    "mtime": 1787432494.4458058,
+    "seen": 1788553272.5753248,
+    "ast_hash": "da04f935573ff0c6e907fad1d01710ee",
+    "semantic_hash": "da04f935573ff0c6e907fad1d01710ee"
+  }
+}

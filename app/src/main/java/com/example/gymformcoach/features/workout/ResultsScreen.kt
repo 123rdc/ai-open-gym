@@ -38,6 +38,8 @@ fun ResultsScreen(
     reps: Int,
     isPr: Boolean = false,
     exerciseSessionId: String = "",
+    /** §4.2: suppressed between superset members - rest fires only after a full round. */
+    showRestTimer: Boolean = true,
     onDone: () -> Unit
 ) {
     val context = LocalContext.current
@@ -68,10 +70,18 @@ fun ResultsScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        RestTimerCard(
-            initialSeconds = prefs.restDurationSeconds,
-            onDurationChange = { prefs.restDurationSeconds = it }
-        )
+        if (showRestTimer) {
+            RestTimerCard(
+                initialSeconds = prefs.restDurationSeconds,
+                onDurationChange = { prefs.restDurationSeconds = it }
+            )
+        } else {
+            Text(
+                text = "Next up in this superset - no rest yet.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = TextSecondary
+            )
+        }
 
         if (exerciseSessionId.isNotEmpty()) {
             Spacer(modifier = Modifier.height(32.dp))

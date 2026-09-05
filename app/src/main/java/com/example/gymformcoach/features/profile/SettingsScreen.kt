@@ -1,11 +1,15 @@
 package com.example.gymformcoach.features.profile
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,11 +27,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.gymformcoach.core.analysis.AiCoachApiClient
+import com.example.gymformcoach.core.designsystem.AccentPalette
 import com.example.gymformcoach.core.designsystem.Background
 import com.example.gymformcoach.core.designsystem.Error
 import com.example.gymformcoach.core.designsystem.Primary
 import com.example.gymformcoach.core.designsystem.Surface
 import com.example.gymformcoach.core.designsystem.TextSecondary
+import com.example.gymformcoach.core.notifications.WorkoutReminderWorker
 import com.example.gymformcoach.core.utils.PreferenceManager
 import com.example.gymformcoach.core.utils.WeightUnit
 import kotlinx.coroutines.launch
@@ -46,6 +52,15 @@ fun SettingsScreen(onBack: () -> Unit) {
     var isConnected by remember { mutableStateOf<Boolean?>(null) }
     var isTesting by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
+
+    var themeMode by remember { mutableStateOf(prefs.themeMode) }
+    var accent by remember { mutableStateOf(prefs.accent) }
+    var keepScreenOn by remember { mutableStateOf(prefs.keepScreenOnDuringWorkout) }
+    var effortEnabled by remember { mutableStateOf(prefs.effortTrackingEnabled) }
+    var effortScale by remember { mutableStateOf(prefs.effortScale) }
+    var reminderEnabled by remember { mutableStateOf(prefs.workoutReminderEnabled) }
+    var reminderHour by remember { mutableStateOf(prefs.workoutReminderHour) }
+    var reminderMinute by remember { mutableStateOf(prefs.workoutReminderMinute) }
 
     Scaffold(
         topBar = {
@@ -67,6 +82,7 @@ fun SettingsScreen(onBack: () -> Unit) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .verticalScroll(rememberScrollState())
                 .padding(20.dp)
         ) {
             Text(text = "Units", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
@@ -75,6 +91,142 @@ fun SettingsScreen(onBack: () -> Unit) {
                 unit = it
                 prefs.weightUnit = it
             })
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // §16 theming
+            Text(text = "Appearance", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(12.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Surface)
+            ) {
+                listOf("dark" to "Dark", "light" to "Light").forEach { (mode, label) ->
+                    val isSelected = mode == themeMode
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable {
+                                themeMode = mode
+                                prefs.themeMode = mode
+                            }
+                            .background(if (isSelected) Primary else Color.Transparent, RoundedCornerShape(12.dp))
+                            .padding(vertical = 12.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = label, color = if (isSelected) Background else Color.White, fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                AccentPalette.options.forEach { (key, color) ->
+                    val isSelected = key == accent
+                    Box(
+                        modifier = Modifier
+                            .size(36.dp)
+                            .clip(androidx.compose.foundation.shape.CircleShape)
+                            .background(color)
+                            .then(
+                                if (isSelected) {
+                                    Modifier.border(2.dp, Color.White, androidx.compose.foundation.shape.CircleShape)
+                                } else Modifier
+                            )
+                            .clickable {
+                                accent = key
+                                prefs.accent = key
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (isSelected) {
+                            androidx.compose.material3.Icon(
+                                androidx.compose.material.icons.Icons.Default.Check,
+                                contentDescription = "Selected",
+                                tint = Color.Black,
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // §3.2 / §10 workout preferences
+            Text(text = "Workouts", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(12.dp))
+            SettingsToggleRow(
+                label = "Keep screen on during workouts",
+                checked = keepScreenOn,
+                onCheckedChange = {
+                    keepScreenOn = it
+                    prefs.keepScreenOnDuringWorkout = it
+                }
+            )
+            SettingsToggleRow(
+                label = "Track effort (RIR/RPE)",
+                checked = effortEnabled,
+                onCheckedChange = {
+                    effortEnabled = it
+                    prefs.effortTrackingEnabled = it
+                }
+            )
+            if (effortEnabled) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Surface)
+                ) {
+                    listOf("RIR", "RPE").forEach { scale ->
+                        val isSelected = scale == effortScale
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable {
+                                    effortScale = scale
+                                    prefs.effortScale = scale
+                                }
+                                .background(if (isSelected) Primary else Color.Transparent, RoundedCornerShape(12.dp))
+                                .padding(vertical = 10.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(text = scale, color = if (isSelected) Background else Color.White, fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // §14 notifications
+            Text(text = "Notifications", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(12.dp))
+            SettingsToggleRow(
+                label = "Workout reminders",
+                checked = reminderEnabled,
+                onCheckedChange = { enabled ->
+                    reminderEnabled = enabled
+                    prefs.workoutReminderEnabled = enabled
+                    if (enabled) {
+                        WorkoutReminderWorker.schedule(context, reminderHour, reminderMinute)
+                    } else {
+                        WorkoutReminderWorker.cancel(context)
+                    }
+                }
+            )
+            if (reminderEnabled) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "Reminds you at %02d:%02d on days with a planned workout you haven't logged yet."
+                        .format(reminderHour, reminderMinute),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = TextSecondary
+                )
+            }
 
             Spacer(modifier = Modifier.height(32.dp))
 
@@ -160,6 +312,24 @@ fun SettingsScreen(onBack: () -> Unit) {
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun SettingsToggleRow(label: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = label, style = MaterialTheme.typography.bodyMedium)
+        Switch(
+            checked = checked,
+            onCheckedChange = onCheckedChange,
+            colors = SwitchDefaults.colors(checkedThumbColor = Primary, checkedTrackColor = Primary.copy(alpha = 0.5f))
+        )
     }
 }
 

@@ -6,9 +6,14 @@ import kotlinx.coroutines.flow.Flow
 class RoutineRepository(private val database: AppDatabase) {
     private val dao = database.routineDao()
 
-    suspend fun saveRoutine(name: String, description: String, exercises: List<RoutineExercise>): String {
+    suspend fun saveRoutine(
+        name: String,
+        description: String,
+        exercises: List<RoutineExercise>,
+        progressionRule: String = "NONE"
+    ): String {
         return database.withTransaction {
-            val routine = Routine(name = name, description = description)
+            val routine = Routine(name = name, description = description, progressionRule = progressionRule)
             dao.insertRoutine(routine)
             dao.insertRoutineExercises(exercises.map { it.copy(routineId = routine.id) })
             routine.id

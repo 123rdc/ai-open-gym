@@ -37,4 +37,10 @@ class ProfileRepository(database: AppDatabase) {
         )
         if (existing == null) dao.insert(snapshot) else dao.update(snapshot)
     }
+
+    /** §17A.1: null clears the goal. No-ops if the profile doesn't exist yet. */
+    suspend fun updateGoalWeight(goalWeightKg: Float?) {
+        val existing = dao.getProfileOnce() ?: return
+        dao.update(existing.copy(goalWeightKg = goalWeightKg, updatedAt = System.currentTimeMillis()))
+    }
 }

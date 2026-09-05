@@ -10,7 +10,7 @@ interface ExerciseSessionDao {
     @Insert
     suspend fun insert(session: ExerciseSession)
 
-    @Query("SELECT * FROM exercise_sessions WHERE exerciseId = :exerciseId ORDER BY date ASC")
+    @Query("SELECT * FROM exercise_sessions WHERE exerciseId = :exerciseId ORDER BY performedAt ASC")
     fun getSessionsForExercise(exerciseId: String): Flow<List<ExerciseSession>>
 
     @Query("SELECT * FROM exercise_sessions WHERE exerciseId = :exerciseId")
