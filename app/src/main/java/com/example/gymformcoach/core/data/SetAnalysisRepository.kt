@@ -8,4 +8,6 @@ class SetAnalysisRepository(database: AppDatabase) {
     suspend fun save(analysis: SetAnalysis) = dao.insert(analysis)
 
     fun observeForSession(sessionId: String): Flow<SetAnalysis?> = dao.getForSession(sessionId)
+
+    suspend fun getRecentOnce(limit: Int): List<SetAnalysis> = dao.getRecentOnce(limit)
 }

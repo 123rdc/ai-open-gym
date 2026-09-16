@@ -118,7 +118,8 @@ fun NavGraph(navController: NavHostController) {
                     navController.navigate(Screen.RoutineCamera.createRoute(routineId, 0))
                 },
                 onEditWeeklyPlan = { navController.navigate(Screen.WeeklyPlan.route) },
-                onOpenBodyWeight = { navController.navigate(Screen.BodyWeight.route) }
+                onOpenBodyWeight = { navController.navigate(Screen.BodyWeight.route) },
+                onOpenChat = { navController.navigate(Screen.Chat.route) }
             )
         }
         composable(Screen.WeeklyPlan.route) {
@@ -171,6 +172,11 @@ fun NavGraph(navController: NavHostController) {
         }
         composable(Screen.Coach.route) {
             com.example.gymformcoach.features.coach.CoachScreen(
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable(Screen.Chat.route) {
+            com.example.gymformcoach.features.chat.ChatScreen(
                 onBack = { navController.popBackStack() }
             )
         }

@@ -12,4 +12,7 @@ interface SetAnalysisDao {
 
     @Query("SELECT * FROM set_analyses WHERE exerciseSessionId = :sessionId LIMIT 1")
     fun getForSession(sessionId: String): Flow<SetAnalysis?>
+
+    @Query("SELECT * FROM set_analyses ORDER BY createdAt DESC LIMIT :limit")
+    suspend fun getRecentOnce(limit: Int): List<SetAnalysis>
 }

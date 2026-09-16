@@ -57,6 +57,9 @@ sealed class Screen(val route: String) {
     // §17D AI training plan coach
     object Coach : Screen("coach")
 
+    // Coach Chat: free-form Q&A, separate from the §17D structured Coach
+    object Chat : Screen("chat")
+
     // Routines
     object MyRoutines : Screen("my_routines")
     object RoutineBuilder : Screen("routine_builder")

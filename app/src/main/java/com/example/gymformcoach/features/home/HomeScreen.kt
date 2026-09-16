@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ChatBubbleOutline
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -47,7 +48,8 @@ fun HomeScreen(
     onSeeAllRoutines: () -> Unit = {},
     onStartPlannedRoutine: (String) -> Unit = {},
     onEditWeeklyPlan: () -> Unit = {},
-    onOpenBodyWeight: () -> Unit = {}
+    onOpenBodyWeight: () -> Unit = {},
+    onOpenChat: () -> Unit = {}
 ) {
     var searchQuery by remember { mutableStateOf("") }
     val bodyParts = ExerciseCatalog.bodyParts
@@ -64,6 +66,11 @@ fun HomeScreen(
                 currentRoute = Screen.Home.route,
                 onTabSelected = onNavigateToTab
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = onOpenChat, containerColor = Primary) {
+                Icon(Icons.Default.ChatBubbleOutline, contentDescription = "Coach Chat", tint = Color.Black)
+            }
         },
         containerColor = Color.Transparent
     ) { paddingValues ->

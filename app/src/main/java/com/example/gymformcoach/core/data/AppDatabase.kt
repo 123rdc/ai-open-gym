@@ -399,14 +399,30 @@ private val MIGRATION_8_9 = object : Migration(8, 9) {
     }
 }
 
+private val MIGRATION_9_10 = object : Migration(9, 10) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        // Coach Chat: a free-form Q&A surface, separate from the §17D structured Coach.
+        db.execSQL(
+            """
+            CREATE TABLE chat_messages (
+                id TEXT NOT NULL PRIMARY KEY,
+                role TEXT NOT NULL,
+                content TEXT NOT NULL,
+                createdAt INTEGER NOT NULL
+            )
+            """.trimIndent()
+        )
+    }
+}
+
 @Database(
     entities = [
         ExerciseSession::class, Routine::class, RoutineExercise::class, UserProfile::class,
         SetAnalysis::class, Exercise::class, SetLog::class,
         WeeklyPlanEntry::class, PlanOverride::class, ActiveSession::class,
-        BodyWeightEntry::class
+        BodyWeightEntry::class, ChatMessage::class
     ],
-    version = 9,
+    version = 10,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -420,6 +436,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun planDao(): PlanDao
     abstract fun activeSessionDao(): ActiveSessionDao
     abstract fun bodyWeightDao(): BodyWeightDao
+    abstract fun chatMessageDao(): ChatMessageDao
 
     companion object {
         @Volatile
@@ -433,7 +450,7 @@ abstract class AppDatabase : RoomDatabase() {
                     "gym_form_coach.db"
                 ).addMigrations(
                     MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7,
-                    MIGRATION_7_8, MIGRATION_8_9
+                    MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10
                 ).build().also { INSTANCE = it }
             }
         }
