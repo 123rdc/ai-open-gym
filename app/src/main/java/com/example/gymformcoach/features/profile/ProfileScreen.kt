@@ -45,7 +45,8 @@ fun ProfileScreen(
     onOpenCoach: () -> Unit = {}
 ) {
     val context = LocalContext.current
-    val unit = remember { PreferenceManager(context).weightUnit }
+    val preferenceManager = remember { PreferenceManager(context) }
+    val unit = remember { preferenceManager.weightUnit }
     val sessions by remember { ExerciseSessionRepository(AppDatabase.getInstance(context)).getAllSessions() }
         .collectAsState(initial = emptyList())
     val personalRecords = remember(sessions) {
@@ -94,7 +95,9 @@ fun ProfileScreen(
                     .clip(CircleShape)
             ) {
                 AsyncImage(
-                    model = "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop",
+                    model = preferenceManager.userPhotoUrl.ifBlank {
+                        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop"
+                    },
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
@@ -102,8 +105,15 @@ fun ProfileScreen(
             }
             Spacer(modifier = Modifier.width(20.dp))
             Column {
-                Text(text = "Sarah Jenkins", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-                Text(text = "sarah.j@example.com", color = Color.White.copy(alpha = 0.6f))
+                Text(
+                    text = preferenceManager.userDisplayName.ifBlank { "Guest" },
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = preferenceManager.userEmail.ifBlank { "Signed in as guest" },
+                    color = Color.White.copy(alpha = 0.6f)
+                )
             }
         }
 

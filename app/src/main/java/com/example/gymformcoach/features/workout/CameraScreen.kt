@@ -41,7 +41,9 @@ import com.example.gymformcoach.core.designsystem.Background
 import com.example.gymformcoach.core.ml.PoseLandmarkerHelper
 import com.google.mediapipe.tasks.vision.poselandmarker.PoseLandmarker
 import com.google.mediapipe.tasks.vision.poselandmarker.PoseLandmarkerResult
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.concurrent.Executors
 
 @Composable
@@ -116,35 +118,76 @@ fun CameraScreen(
     }
 
     val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
+    var cameraProvider by remember { mutableStateOf<ProcessCameraProvider?>(null) }
     var previewView by remember { mutableStateOf<PreviewView?>(null) }
     val analysisExecutor = remember { Executors.newSingleThreadExecutor() }
-    val frameCounter = remember { java.util.concurrent.atomic.AtomicInteger(0) }
 
-    // PoseLandmarkerHelper initialization
-    val poseLandmarkerHelper = remember {
-        PoseLandmarkerHelper(
-            context = context,
-            listener = object : PoseLandmarkerHelper.LandmarkerListener {
-                override fun onError(error: String) {
-                    Log.e("CameraScreen", "PoseLandmarker Error: $error")
-                }
-
-                override fun onResults(
-                    result: PoseLandmarkerResult,
-                    inferenceTime: Long,
-                    inputImageHeight: Int,
-                    inputImageWidth: Int
-                ) {
-                    viewModel.onPoseResult(result)
-                }
-            }
+    LaunchedEffect(cameraProviderFuture) {
+        cameraProviderFuture.addListener(
+            { cameraProvider = cameraProviderFuture.get() },
+            ContextCompat.getMainExecutor(context)
         )
+    }
+
+    // Model load + GPU-delegate setup is a heavyweight blocking call (can take several
+    // hundred ms) - built off the main thread so opening the camera screen doesn't freeze
+    // the UI (this used to run synchronously inside `remember`).
+    var poseLandmarkerHelper by remember { mutableStateOf<PoseLandmarkerHelper?>(null) }
+    val poseLandmarkerListener = remember {
+        object : PoseLandmarkerHelper.LandmarkerListener {
+            override fun onError(error: String) {
+                Log.e("CameraScreen", "PoseLandmarker Error: $error")
+            }
+
+            override fun onResults(
+                result: PoseLandmarkerResult,
+                inferenceTime: Long,
+                inputImageHeight: Int,
+                inputImageWidth: Int
+            ) {
+                viewModel.onPoseResult(result)
+            }
+        }
+    }
+    LaunchedEffect(Unit) {
+        poseLandmarkerHelper = withContext(Dispatchers.IO) {
+            PoseLandmarkerHelper(context = context, listener = poseLandmarkerListener)
+        }
     }
 
     DisposableEffect(Unit) {
         onDispose {
-            poseLandmarkerHelper.close()
+            poseLandmarkerHelper?.close()
             analysisExecutor.shutdown()
+        }
+    }
+
+    // Bind CameraX use cases exactly once, as soon as the preview surface, the camera
+    // provider, and the pose model are all ready - not on every recomposition. poseResult/
+    // repCount/formFeedback (read above as collectAsState locals) change on every tracked
+    // frame, and re-running unbindAll()+bindToLifecycle() that often was stuttering the
+    // preview continuously during a set, not just once on entry.
+    LaunchedEffect(previewView, cameraProvider, poseLandmarkerHelper) {
+        val provider = cameraProvider ?: return@LaunchedEffect
+        val pv = previewView ?: return@LaunchedEffect
+        val helper = poseLandmarkerHelper ?: return@LaunchedEffect
+
+        val preview = Preview.Builder().build().also { it.setSurfaceProvider(pv.surfaceProvider) }
+        val imageAnalysis = ImageAnalysis.Builder()
+            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+            .setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888)
+            .build()
+            .also {
+                it.setAnalyzer(analysisExecutor) { imageProxy ->
+                    helper.detectLiveStream(imageProxy = imageProxy, isFrontCamera = false)
+                }
+            }
+
+        try {
+            provider.unbindAll()
+            provider.bindToLifecycle(lifecycleOwner, CameraSelector.DEFAULT_BACK_CAMERA, preview, imageAnalysis)
+        } catch (e: Exception) {
+            Log.e("CameraScreen", "Use case binding failed", e)
         }
     }
 
@@ -157,43 +200,17 @@ fun CameraScreen(
                         scaleType = PreviewView.ScaleType.FILL_CENTER
                     }
                 },
-                modifier = Modifier.fillMaxSize(),
-                update = {
-                    val cameraProvider = cameraProviderFuture.get()
-                    val preview = Preview.Builder().build().also {
-                        it.setSurfaceProvider(previewView?.surfaceProvider)
-                    }
-
-                    val imageAnalysis = ImageAnalysis.Builder()
-                        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                        .setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888)
-                        .build()
-                        .also {
-                            it.setAnalyzer(analysisExecutor) { imageProxy ->
-                                val frameNumber = frameCounter.incrementAndGet()
-                                Log.d("CameraAnalyzer", "Frame #$frameNumber reaching analyzer at ${System.currentTimeMillis()} (${imageProxy.width}x${imageProxy.height})")
-                                poseLandmarkerHelper.detectLiveStream(
-                                    imageProxy = imageProxy,
-                                    isFrontCamera = false // Change if needed
-                                )
-                            }
-                        }
-
-                    val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-
-                    try {
-                        cameraProvider.unbindAll()
-                        cameraProvider.bindToLifecycle(
-                            lifecycleOwner,
-                            cameraSelector,
-                            preview,
-                            imageAnalysis
-                        )
-                    } catch (e: Exception) {
-                        Log.e("CameraScreen", "Use case binding failed", e)
+                modifier = Modifier.fillMaxSize()
+            )
+            if (poseLandmarkerHelper == null) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        CircularProgressIndicator(color = Primary)
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text("Preparing camera...", color = Color.White)
                     }
                 }
-            )
+            }
         } else {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(text = "Camera permission is required", color = Color.White)

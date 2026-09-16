@@ -19,9 +19,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.sp
+import com.example.gymformcoach.core.auth.GoogleAuthManager
 import com.example.gymformcoach.core.designsystem.Background
+import com.example.gymformcoach.core.designsystem.Error
 import com.example.gymformcoach.core.designsystem.Primary
+import com.example.gymformcoach.core.designsystem.components.GoogleSignInButton
 import com.example.gymformcoach.core.designsystem.components.PrimaryButton
+import com.example.gymformcoach.core.utils.PreferenceManager
+import androidx.compose.ui.platform.LocalContext
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,9 +35,34 @@ fun SignUpScreen(
     onSignUpSuccess: () -> Unit,
     onBack: () -> Unit
 ) {
+    val context = LocalContext.current
+    val preferenceManager = remember { PreferenceManager(context) }
+    val coroutineScope = rememberCoroutineScope()
+
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var isGoogleLoading by remember { mutableStateOf(false) }
+    var googleError by remember { mutableStateOf<String?>(null) }
+
+    val onGoogleSignIn: () -> Unit = {
+        coroutineScope.launch {
+            isGoogleLoading = true
+            googleError = null
+            when (val result = GoogleAuthManager.signIn(context)) {
+                is GoogleAuthManager.Result.Success -> {
+                    preferenceManager.userDisplayName = result.displayName
+                    preferenceManager.userEmail = result.email
+                    preferenceManager.userPhotoUrl = result.photoUrl ?: ""
+                    preferenceManager.isGoogleSignedIn = true
+                    onSignUpSuccess()
+                }
+                is GoogleAuthManager.Result.Cancelled -> Unit
+                is GoogleAuthManager.Result.Error -> googleError = result.message
+            }
+            isGoogleLoading = false
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -140,6 +171,17 @@ fun SignUpScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+        GoogleSignInButton(
+            loading = isGoogleLoading,
+            onClick = onGoogleSignIn
+        )
+        googleError?.let { message ->
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = message, style = MaterialTheme.typography.bodySmall, color = Error)
+        }
+
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
@@ -157,7 +199,7 @@ fun SignUpScreen(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            SocialIcon(icon = Icons.Default.Person) // Google
+            SocialIcon(icon = Icons.Default.Person, onClick = onGoogleSignIn) // Google
             Spacer(modifier = Modifier.width(16.dp))
             SocialIcon(icon = Icons.Default.Person) // Facebook
             Spacer(modifier = Modifier.width(16.dp))
@@ -180,11 +222,12 @@ fun SignUpScreen(
 }
 
 @Composable
-fun SocialIcon(icon: ImageVector) {
+fun SocialIcon(icon: ImageVector, onClick: () -> Unit = {}) {
     Surface(
         modifier = Modifier.size(56.dp),
         shape = CircleShape,
-        color = Color.White
+        color = Color.White,
+        onClick = onClick
     ) {
         Box(contentAlignment = Alignment.Center) {
             Icon(imageVector = icon, contentDescription = null, tint = Color.Black)

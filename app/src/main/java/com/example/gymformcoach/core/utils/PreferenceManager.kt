@@ -42,6 +42,11 @@ class PreferenceManager(context: Context) {
         private const val KEY_ACCENT = "accent"
         private const val KEY_BODY_FIGURE = "body_figure"
         private const val KEY_AI_COACH_ENABLED = "ai_coach_enabled"
+
+        private const val KEY_USER_DISPLAY_NAME = "user_display_name"
+        private const val KEY_USER_EMAIL = "user_email"
+        private const val KEY_USER_PHOTO_URL = "user_photo_url"
+        private const val KEY_GOOGLE_SIGNED_IN = "google_signed_in"
     }
 
     var isOnboardingComplete: Boolean
@@ -175,4 +180,22 @@ class PreferenceManager(context: Context) {
     var aiCoachEnabled: Boolean
         get() = prefs.getBoolean(KEY_AI_COACH_ENABLED, false)
         set(value) = prefs.edit().putBoolean(KEY_AI_COACH_ENABLED, value).apply()
+
+    /** Populated from GoogleIdTokenCredential after a successful Sign in with Google. */
+    var userDisplayName: String
+        get() = prefs.getString(KEY_USER_DISPLAY_NAME, "") ?: ""
+        set(value) = prefs.edit().putString(KEY_USER_DISPLAY_NAME, value).apply()
+
+    var userEmail: String
+        get() = prefs.getString(KEY_USER_EMAIL, "") ?: ""
+        set(value) = prefs.edit().putString(KEY_USER_EMAIL, value).apply()
+
+    /** The Google account's profilePictureUri, shown as the Profile screen avatar. */
+    var userPhotoUrl: String
+        get() = prefs.getString(KEY_USER_PHOTO_URL, "") ?: ""
+        set(value) = prefs.edit().putString(KEY_USER_PHOTO_URL, value).apply()
+
+    var isGoogleSignedIn: Boolean
+        get() = prefs.getBoolean(KEY_GOOGLE_SIGNED_IN, false)
+        set(value) = prefs.edit().putBoolean(KEY_GOOGLE_SIGNED_IN, value).apply()
 }

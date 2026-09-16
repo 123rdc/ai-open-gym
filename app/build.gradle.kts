@@ -70,6 +70,11 @@ dependencies {
     implementation(libs.androidx.biometric)
     implementation(libs.coil.compose)
 
+    // Sign in with Google (Credential Manager)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
+
     // Room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)

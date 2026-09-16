@@ -10,10 +10,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.gymformcoach.R
 import com.example.gymformcoach.core.designsystem.Background
 import com.example.gymformcoach.core.designsystem.Primary
 import com.example.gymformcoach.core.designsystem.components.PrimaryButton
@@ -56,6 +58,15 @@ fun LaunchScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.weight(1.5f))
+
+            Icon(
+                painter = painterResource(id = R.drawable.ic_bicep_mark),
+                contentDescription = null,
+                tint = Primary,
+                modifier = Modifier.size(96.dp)
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
 
             // Stylized Logo "FB FITBODY"
             Text(

@@ -311,6 +311,16 @@ fun SettingsScreen(onBack: () -> Unit) {
                     color = if (isConnected == true) Primary else Error
                 )
             }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Text(text = "About", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "App icon mark: “Biceps” by Delapouite, game-icons.net, licensed under CC BY 3.0.",
+                style = MaterialTheme.typography.bodySmall,
+                color = TextSecondary
+            )
         }
     }
 }
